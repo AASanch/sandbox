@@ -25,7 +25,7 @@ var srcPaths = {
 
 var destPaths = {
     app: `${webroot}/app/`,
-    js: `${webroot}/js/`
+    js: `${webroot}/js/`,
 };
 
 //cleans the wwwroot/app folder
