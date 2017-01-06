@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OpenGameList.Services;
 
 namespace WebApplication
 {
@@ -37,6 +38,7 @@ namespace WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSingleton<IItemsProviderService>(new ItemsProviderService());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

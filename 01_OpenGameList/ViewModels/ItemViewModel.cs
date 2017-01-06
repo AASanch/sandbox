@@ -25,7 +25,6 @@ namespace OpenGameList.ViewModels
         [DefaultValue(0)] 
         public int Flags { get; set; } 
         public string UserId { get; set; } 
-        [JsonIgnore] 
         public int ViewCount { get; set; } 
         public DateTime CreatedDate { get; set; } 
         public DateTime LastModifiedDate { get; set; } 
