@@ -36,6 +36,7 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +58,14 @@ namespace WebApplication
 
             app
                 .UseDefaultFiles()
-                .UseStaticFiles()
+                .UseStaticFiles(new StaticFileOptions() {
+                    OnPrepareResponse = (context) => {
+                        // Disable caching for all static files.        
+                        context.Context.Response.Headers["Cache-Control"] = "no-cache, no-store";
+                        context.Context.Response.Headers["Pragma"] = "no-cache";        
+                        context.Context.Response.Headers["Expires"] = "-1";
+                    }
+                })
                 .UseMvc();
         }
     }

@@ -8,50 +8,60 @@ var gulp = require("gulp"),
 //Paths
 var webroot = "./wwwroot";
 var tsconfig = "./tsconfig.json";
+var systemJsConfig = "./Scripts/systemjs.config.js";
 var srcPaths = {
-    app: ["Scripts/app/**/*.ts"],
-    js: [
+    ts: ["Scripts/app/**/*.ts"],
+    npm: [
         "Scripts/app/**/*.js",
-        "node_modules/@angular/**",
-        "node_modules/@rxjs/**",
         "node_modules/core-js/client/shim.min.js",
         'node_modules/zone.js/dist/zone.js',
         'node_modules/reflect-metadata/Reflect.js',
         'node_modules/systemjs/dist/system.src.js',
         'node_modules/typescript/lib/typescript.js'],
-    html: ["Scripts/app/**/*.html"],
+    ng: ["node_modules/@angular/**"],
+    rxjs: ["node_modules/rxjs/**"],
+    html: ["Scripts/**/*.html"],
     css: ["Scripts/app/**/*.css"]
 };
 
 var destPaths = {
+    webroot: `${webroot}/`,
     app: `${webroot}/app/`,
     js: `${webroot}/js/`,
+    ng: `${webroot}/js/@angular/`,
+    rxjs: `${webroot}/js/rxjs/`
 };
 
-//cleans the wwwroot/app folder
-gulp.task("clean:app", function() {
-    return gulp.src(destPaths.app)
+//cleans the wwwroot folder
+gulp.task("clean", function() {
+    return gulp.src(webroot)
         .pipe(clean({ force: true }));
-});
+})
 
-//cleans the wwwroot/js folder
-gulp.task("clean:js", function() {
-    return gulp.src(destPaths.js)
-        .pipe(clean({ force: true }));
-});
+//copies all js files from external libraries to wwwroot
+gulp.task("copy:js", ["clean"], function() {
+    gulp.src(systemJsConfig)
+        .pipe(gulp.dest(webroot));
 
-//clean all within wwwroot
-gulp.task("clean", ["clean:app", "clean:js"]);
+    gulp.src(srcPaths.ng)
+        .pipe(gulp.dest(destPaths.ng));
 
-//copies all js files from external libraries to wwwroot/js
-gulp.task("copy:js", ["clean:js"], function() {
-    return gulp.src(srcPaths.js)
+    gulp.src(srcPaths.rxjs)
+        .pipe(gulp.dest(destPaths.rxjs));
+    
+    return gulp.src(srcPaths.npm)
         .pipe(gulp.dest(destPaths.js));
 });
 
+//copies html files into wwwroot/app
+gulp.task("copy:html", ["clean"], function() {
+  return gulp.src(srcPaths.html)
+    .pipe(gulp.dest(destPaths.webroot));
+})
+
 //compile, minify, and create sourcemaps and place them to wwwroot/app.
-gulp.task("build:app", ["clean:app"], function() {
-    return gulp.src(srcPaths.app)
+gulp.task("build:app", ["clean"], function() {
+    return gulp.src(srcPaths.ts)
         .pipe(sourcemaps.init())
         .pipe(typescript(require(tsconfig).compilerOptions))
         .pipe(uglify({ mangle: false }))
@@ -65,5 +75,5 @@ gulp.task("watch", function() {
 })
 
 //global build task
-gulp.task("build", ["clean", "copy:js", "build:app"]);
+gulp.task("build", ["clean", "copy:js", "build:app", "copy:html"]);
 
