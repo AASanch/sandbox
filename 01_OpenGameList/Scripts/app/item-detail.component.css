@@ -1,0 +1,15 @@
+.item-detail {
+    margin: 5px;
+    padding: 5px 10px;
+    border: 1px solid black;
+    background-color: #dddddd;
+    width: 300px;
+}
+
+.item-detail * {
+    vertical-align: middle;
+}
+
+.item-detail ul li {
+    padding: 5px 0;
+}

@@ -8,16 +8,20 @@ import { Item } from "./item";
     styleUrls: [ "./app/item-list.component.css" ]
 })
 export class ItemListComponent implements OnInit {
+    selectedItem: Item;
     items: Array<Item>;
     errorMessage: string;
     
-    constructor(private itemService: ItemService) {
-    }
+    constructor(private itemService: ItemService) { }
 
     public ngOnInit(): void {
         this.itemService.getLatest()
             .subscribe(
                 latestItems => this.items = latestItems,
                 error => this.errorMessage = <any>error);            
+    }
+
+    public onSelect(item: Item) {
+        this.selectedItem = item;
     }
 }
