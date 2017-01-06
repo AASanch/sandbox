@@ -8,6 +8,9 @@ namespace OpenGameList.Services
     public class ItemsProviderService : IItemsProviderService
     {
         private List<ItemViewModel> _items = new List<ItemViewModel>();
+        private Random _rng = new Random();
+
+        public int ItemCount => this._items.Count;
 
         public ItemsProviderService() 
         {
@@ -18,6 +21,9 @@ namespace OpenGameList.Services
         {
             return this._items;
         }
+
+        ItemViewModel IItemsProviderService.GetItem(int id)
+            =>this._items.FirstOrDefault(item => item.Id == id);
 
         private void Init() 
         {

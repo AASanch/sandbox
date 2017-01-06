@@ -11,6 +11,7 @@ namespace OpenGameList.Controllers
     [Route("api/[controller]")]
     public class ItemsController : Controller
     {
+        private const int DefaultCount = 10;
         private IItemsProviderService _itemsProvider;
         
         private JsonSerializerSettings DefaultJsonSettings { get; } 
@@ -24,34 +25,60 @@ namespace OpenGameList.Controllers
             this._itemsProvider = itemsProvider;    
         }
 
-        [HttpGet("GetLatest/{num}")]
-        public JsonResult GetLatest(int num)
+        [HttpGet()]
+        public IActionResult Get()
         {
+            return new NotFoundResult();
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(int id) 
+        {
+            var item = this._itemsProvider.GetItem(id);
+            return new JsonResult(item, DefaultJsonSettings);
+        }
+
+        [HttpGet("GetLatest")]
+        public IActionResult GetLatest() => GetLatest(DefaultCount);
+        
+
+        [HttpGet("GetLatest/{num}")]
+        public IActionResult GetLatest(int num)
+        {
+            var n = Math.Min(num, _itemsProvider.ItemCount);
             var items = this._itemsProvider
                 .GetAllItems()
                 .OrderBy(item => item.CreatedDate)
-                .Take(num);
+                .Take(n);
 
             return new JsonResult(items, DefaultJsonSettings);
         }
+
+        [HttpGet("GetMostViewed")]
+        public IActionResult GetMostViewed() => GetMostViewed(DefaultCount);
 
         [HttpGet("GetMostViewed/{num}")]
         public JsonResult GetMostViewed(int num)
         {
+            var n = Math.Min(num, _itemsProvider.ItemCount);
             var items = this._itemsProvider
                 .GetAllItems()
                 .OrderByDescending(item => item.ViewCount)           
-                .Take(num);
+                .Take(n);
             return new JsonResult(items, DefaultJsonSettings);
         }
+
+        [HttpGet("GetRandom")]
+        public JsonResult GetRandom() => GetRandom(DefaultCount);
 
         [HttpGet("GetRandom/{num}")]
         public JsonResult GetRandom(int num)
         {
+            var n = Math.Min(num, _itemsProvider.ItemCount);
              var items = this._itemsProvider
                 .GetAllItems()
                 .OrderBy(item => Guid.NewGuid())           
-                .Take(num);
+                .Take(n);
             return new JsonResult(items, DefaultJsonSettings);
         }
     }

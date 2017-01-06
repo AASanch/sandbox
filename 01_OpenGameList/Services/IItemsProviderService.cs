@@ -5,6 +5,8 @@ namespace OpenGameList.Services
 {
     public interface IItemsProviderService
     {
-         IEnumerable<ItemViewModel> GetAllItems();
+        int ItemCount {get;}
+        IEnumerable<ItemViewModel> GetAllItems();
+        ItemViewModel GetItem(int id);
     }
 }

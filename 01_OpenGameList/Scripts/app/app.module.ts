@@ -1,11 +1,17 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from "@angular/http";
+import { FormsModule } from "@angular/forms";
+import "rxjs/Rx";
 
 import { AppComponent }  from './app.component';
+import { ItemListComponent } from "./item-list.component";
+import { ItemService } from "./item.service";
 
 @NgModule({
-  imports:      [ BrowserModule ],
-  declarations: [ AppComponent ],
-  bootstrap:    [ AppComponent ]
+  imports:      [ BrowserModule, HttpModule, FormsModule ],
+  declarations: [ AppComponent, ItemListComponent ],
+  bootstrap:    [ AppComponent ],
+  providers:    [ ItemService ]
 })
 export class AppModule { }

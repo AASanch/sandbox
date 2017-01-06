@@ -21,7 +21,7 @@ var srcPaths = {
     ng: ["node_modules/@angular/**"],
     rxjs: ["node_modules/rxjs/**"],
     html: ["Scripts/**/*.html"],
-    css: ["Scripts/app/**/*.css"]
+    css: ["Scripts/**/*.css"]
 };
 
 var destPaths = {
@@ -53,11 +53,17 @@ gulp.task("copy:js", ["clean"], function() {
         .pipe(gulp.dest(destPaths.js));
 });
 
-//copies html files into wwwroot/app
+//copies html files into wwwroot.
 gulp.task("copy:html", ["clean"], function() {
   return gulp.src(srcPaths.html)
     .pipe(gulp.dest(destPaths.webroot));
 })
+
+//copies css files into wwwroot.
+gulp.task("copy:css", ["clean"], function(){
+   return gulp.src(srcPaths.css)
+    .pipe(gulp.dest(destPaths.webroot)) ;
+});
 
 //compile, minify, and create sourcemaps and place them to wwwroot/app.
 gulp.task("build:app", ["clean"], function() {
@@ -75,5 +81,5 @@ gulp.task("watch", function() {
 })
 
 //global build task
-gulp.task("build", ["clean", "copy:js", "build:app", "copy:html"]);
+gulp.task("build", ["clean", "copy:js", "build:app", "copy:html", "copy:css"]);
 
